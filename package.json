@@ -1,0 +1,10 @@
+{
+  "name": "koumori-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Cookies",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
