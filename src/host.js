@@ -12,6 +12,7 @@ class Host{
     this.urlExceptions = [
       /(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?/,
       /(?:https?:\/\/)?(?:m\.|www\.)?(?:bilibili|live\.bilibili)\.com\/?/,
+      /(?:https?:\/\/)?(?:m\.|www\.)?(b23\.tv)\/?/,
       /http(?:s)?:\/\/(?:www)?twitter\.com\/([a-zA-Z0-9_]+)/
     ]
 
@@ -84,6 +85,9 @@ class Host{
       let isException = this.urlExceptions.some(url => url.test(message.content))
 
       if (!isException){
+        //log what link is being deleted
+        console.log("deleted: " + message.content)
+
         message.delete()
 
         return true
