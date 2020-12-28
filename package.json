@@ -5,6 +5,9 @@
   "author": "Cookies",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.5.1"
+    "axios": "^0.21.1",
+    "baidu-translate-api": "^0.4.3",
+    "discord.js": "^12.5.1",
+    "ibm-watson": "^6.0.0"
   }
 }

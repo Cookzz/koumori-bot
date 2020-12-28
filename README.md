@@ -3,7 +3,7 @@
 Specially made for nanoha's fan discord.
 
 ## TODO Features
-- [ ] Support translations
+- [ ] Support translating nano's tweets
 - [ ] Add more reaction gifs?
 - [ ] Assign language roles (EN, CN, JP)
 
@@ -11,4 +11,16 @@ Specially made for nanoha's fan discord.
 - [ ] Get a new power supply to host Koumori Bot 24/7
 
 ## Finished Features
-- [X] Block URLs aside from youtube, bilibili and twitter
+- [X] Support translations
+- [X] Block URLs that are not whitelist
+
+## Whitelisted websites
+- [X] Youtube
+- [X] Twitter
+- [X] Pixiv
+- [X] Bilibili
+
+## Translation dependencies
+
+* [https://www.ibm.com/cloud/watson-language-translator](IBM Watson Language Translator)
+* [https://github.com/TimLuo465/baidu-translate-api](baidu-translate-api)
