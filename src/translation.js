@@ -59,6 +59,9 @@ class Translation {
         message.reply("Unable to translate.")
       } else if (error.includes('target language is not supported')){
         message.reply("Unsupported language")
+      } else {
+        //if the failure is unknown, fallback to baidu
+        this.BaiduTranslator(params, message)
       }
     }
   }
