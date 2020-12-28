@@ -22,5 +22,5 @@ Specially made for nanoha's fan discord.
 
 ## Translation dependencies
 
-* [https://www.ibm.com/cloud/watson-language-translator](IBM Watson Language Translator)
-* [https://github.com/TimLuo465/baidu-translate-api](baidu-translate-api)
+* [IBM Watson Language Translator](https://www.ibm.com/cloud/watson-language-translator)
+* [baidu-translate-api](https://github.com/TimLuo465/baidu-translate-api)
