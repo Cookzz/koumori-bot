@@ -2,6 +2,13 @@
 
 Specially made for nanoha's fan discord.
 
+## Getting Started
+
+Before getting started, you need to create a constants.json file on the root directory of the project and provide the following keys:
+
+1. Discord Bot token (example - "token":"........")
+2. IBM API Key (example - "IBM_API_KEY":".......") //this is optional
+
 ## TODO Features
 - [ ] Support translating nano's tweets
 - [ ] Add more reaction gifs?
