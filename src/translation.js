@@ -2,6 +2,8 @@ const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
 const { IamAuthenticator } = require('ibm-watson/auth')
 const { IBM_API_KEY } = require('../constants');
 
+const { Google } = require('@opentranslate/google')
+
 const languageTranslator = new LanguageTranslatorV3({
   version: '2018-05-01',
   authenticator: new IamAuthenticator({
@@ -20,8 +22,8 @@ class Translation {
   /**
    * Detect language from user input
    *
-   * @param {String} text User input text
-   * @return {String} User text
+   * @param {String} text   User input text
+   * @return {String}       Language (en, cn, etc.)
   **/
   async detectLanguage(text){
     let result = await languageTranslator.identify({text})
@@ -32,24 +34,16 @@ class Translation {
   /**
    * Run the IBM cloud translator
    *
-   * @param {Object} params Translation parameters
-   * @param {Object} message Message object
-   * @return void.
+   * @param {Object} params   Translation parameters
+   * @param {Object} message  Message object
+   * @return {String} Translated text.
   **/
   async IBMTranslator(params, message){
     try {
       const { result } = await languageTranslator.translate(params)
-
       const translatedMessage = result.translations[0].translation
-      const { MessageEmbed } = require('discord.js');
-      const { languages } = require('./constants/languages.json')
-
-      const embeddedMsg = new MessageEmbed()
-                            .setAuthor(message.author.username, message.author.displayAvatarURL())
-                            .setDescription(translatedMessage)
-                            .setFooter(`From ${languages[params.source].language_name}`)
-
-      message.channel.send(embeddedMsg)
+      
+      return translatedMessage
     } catch (err){
       console.log('error:', err);
 
@@ -61,7 +55,7 @@ class Translation {
         message.reply("Unsupported language")
       } else {
         //if the failure is unknown, fallback to baidu
-        this.BaiduTranslator(params, message)
+        return await this.BaiduTranslator(params, message)
       }
     }
   }
@@ -69,9 +63,9 @@ class Translation {
   /**
    * Run Baidu Translator
    *
-   * @param {Object} params Translation parameters
-   * @param {Object} message Message object
-   * @return void.
+   * @param {Object} params   Translation parameters
+   * @param {Object} message  Message object
+   * @return {String} Translated text.
   **/
   async BaiduTranslator(params, message){
     const options = {
@@ -82,15 +76,7 @@ class Translation {
       const result = await translate(params.text, options)
       const translatedMessage = result.trans_result.dst
 
-      const { MessageEmbed } = require('discord.js');
-      const { languages } = require('./constants/languages.json')
-
-      const embeddedMsg = new MessageEmbed()
-                            .setAuthor(message.author.username, message.author.displayAvatarURL())
-                            .setDescription(translatedMessage)
-                            .setFooter(`From ${languages[params.source].language_name}`)
-
-      message.channel.send(embeddedMsg)
+      return translatedMessage
     } catch (err){
       console.log('error:', err);
 
@@ -100,6 +86,36 @@ class Translation {
         message.reply("Unable to translate.")
       } else if (error.includes('target language is not supported')){
         message.reply("Unsupported language")
+      }
+    }
+  }
+
+  /**
+   * Run Google Translate
+   *
+   * @param {Object} params   Translation parameters
+   * @param {Object} message  Message object
+   * @return {String} Translated text.
+  **/
+  async GoogleTranslator(params, message){
+    const google = new Google({
+      order: ['com', 'cn'],
+      concurrent: true,
+      apiAsFallback: true
+    })
+
+    try {
+      const result = await google.translate(params.text, params.source, params.target)
+      const translatedMessage = result.trans.paragraphs[0]
+
+      return translatedMessage
+    } catch (err){
+      console.log('error:', err);
+
+      let error = JSON.stringify(err)
+
+      if (error){
+        return await this.IBMTranslator(params, message)
       }
     }
   }

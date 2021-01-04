@@ -10,7 +10,9 @@ Before getting started, you need to create a constants.json file on the root dir
 2. IBM API Key (example - "IBM_API_KEY":".......") //this is optional
 
 ## TODO Features
-- [ ] Support translating nano's tweets
+- [ ] Implement [Yandex.Translate](https://cloud.yandex.com/docs/translate/) for more accurate en-rus translations
+- [ ] Implement [Tencent Translation](https://cloud.tencent.com/product/tmt) as en-cn translation alternative
+- [ ] Implement embedded database to cache translations (full sentences only) to boost translation speeds
 - [ ] Add more reaction gifs?
 - [ ] Assign language roles (EN, CN, JP)
 
@@ -19,6 +21,8 @@ Before getting started, you need to create a constants.json file on the root dir
 
 ## Finished Features
 - [X] Support translations
+- [X] Support multi-language translations (example: .t ja,zh )
+- [X] Auto-translate nano's tweets
 - [X] Block URLs that are not whitelist
 
 ## Whitelisted websites
@@ -31,3 +35,12 @@ Before getting started, you need to create a constants.json file on the root dir
 
 * [IBM Watson Language Translator](https://www.ibm.com/cloud/watson-language-translator)
 * [baidu-translate-api](https://github.com/TimLuo465/baidu-translate-api)
+* [![OpenTranslate](https://img.shields.io/badge/OpenTranslate-Compatible-brightgreen)](https://github.com/OpenTranslate)
+
+## Special Thanks
+
+For helping me test translations and provide suggestions.
+
+* CarHer94🔺
+* RWS
+* 茶栗·CharlieJiang
