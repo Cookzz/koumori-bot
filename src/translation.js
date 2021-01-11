@@ -14,6 +14,8 @@ const languageTranslator = new LanguageTranslatorV3({
 
 const translate = require("baidu-translate-api");
 
+const Database = require('./utils/database_utils')
+
 class Translation {
   constructor(client) {
     this.client=client
@@ -42,6 +44,14 @@ class Translation {
     try {
       const { result } = await languageTranslator.translate(params)
       const translatedMessage = result.translations[0].translation
+
+      const insertObj = {
+        source: params.source,
+        target: params.target,
+        origText: params.text,
+        transText: translatedMessage
+      }
+      Database.insertDb(insertObj)
       
       return translatedMessage
     } catch (err){
@@ -76,6 +86,15 @@ class Translation {
       const result = await translate(params.text, options)
       const translatedMessage = result.trans_result.dst
 
+      //Translation object { source: .., target: .., origText: .., transText: .. }.
+      const insertObj = {
+        source: params.source,
+        target: params.target,
+        origText: params.text,
+        transText: translatedMessage
+      }
+      Database.insertDb(insertObj)
+
       return translatedMessage
     } catch (err){
       console.log('error:', err);
@@ -87,6 +106,9 @@ class Translation {
       } else if (error.includes('target language is not supported')){
         message.reply("Unsupported language")
       }
+
+      //use google translate as last result
+      this.GoogleTranslator(params, message)
     }
   }
 
@@ -107,6 +129,14 @@ class Translation {
     try {
       const result = await google.translate(params.text, params.source, params.target)
       const translatedMessage = result.trans.paragraphs[0]
+
+      const insertObj = {
+        source: params.source,
+        target: params.target,
+        origText: params.text,
+        transText: translatedMessage
+      }
+      Database.insertDb(insertObj)
 
       return translatedMessage
     } catch (err){

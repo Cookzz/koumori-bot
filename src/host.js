@@ -1,5 +1,6 @@
 const Translation = require('./translation')
-const MessageUtils = require('./utils/MessageUtils')
+const MessageUtils = require('./utils/message_utils')
+const Database = require('./utils/database_utils')
 const { languages } = require('./constants/languages.json')
 
 class Host{
@@ -170,6 +171,19 @@ class Host{
       return
     }
 
+    let translation = await this.retrieveFromDb(translateParams);
+    if (translation){
+      const fieldParam = {
+        title: languages[translateParams.target].language_name,
+        description: translation
+      }
+    
+      let embeddedMsg = this.messageBuilder.embedMessageBuilder([fieldParam], translateParams, message)
+      message.channel.send(embeddedMsg)
+      
+      return;
+    }
+
     let embeddedMsg = null
 
     if (target == 'zh'){
@@ -182,7 +196,7 @@ class Host{
       embeddedMsg = this.messageBuilder.embedMessageBuilder([fieldParam], translateParams, message)
     } else {
       // let translatedText = await this.translator.IBMTranslator(translateParams, message)
-      let translatedText = await this.translator.GoogleTranslator(translateParams, message)
+      let translatedText = await this.translator.IBMTranslator(translateParams, message)
       const fieldParam = {
         title: languages[translateParams.target].language_name,
         description: translatedText
@@ -234,7 +248,7 @@ class Host{
       } else {
         return (
           (callback) => {
-            this.translator.GoogleTranslator(langParams).then((enTranslationText)=>{
+            this.translator.IBMTranslator(langParams).then((enTranslationText)=>{
               callback(null, { 
                 lang,
                 text: enTranslationText 
@@ -299,7 +313,7 @@ class Host{
     //translate both en and cn in parallel
     parallel({
       en: (callback)=>{
-        this.translator.GoogleTranslator(enParams).then((enTranslationText)=>{
+        this.translator.IBMTranslator(enParams).then((enTranslationText)=>{
           callback(null, enTranslationText)
         }, (err)=>{
           callback(err, null)
@@ -307,7 +321,7 @@ class Host{
         
       },
       cn: (callback)=>{
-        this.translator.GoogleTranslator(cnParams).then((cnTranslationText)=>{
+        this.translator.IBMTranslator(cnParams).then((cnTranslationText)=>{
           callback(null, cnTranslationText)
         }, (err)=>{
           callback(err, null)
@@ -369,7 +383,21 @@ class Host{
     return false
   }
 
+  async retrieveFromDb(params){
+    const queryObj = {
+      source: params.source,
+      target: params.target,
+      origText: params.text
+    }
 
+    let result = await Database.queryDb(queryObj)
+
+    if (result && result[params.target]){
+      return result[params.target]
+    }
+
+    return null;
+  }
 }
 
 module.exports=Host
